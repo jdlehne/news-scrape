@@ -1,0 +1,34 @@
+{
+  "name": "news-scrape",
+  "version": "1.0.0",
+  "description": "Web app that lets users view and leave comments on the latest news, using Mongoose and Cheerio to scrape news from another site",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdlehne/news-scrape.git"
+  },
+  "keywords": [
+    "mongo",
+    "mongoose",
+    "express",
+    "node",
+    "handlebars"
+  ],
+  "author": "josh lehne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdlehne/news-scrape/issues"
+  },
+  "homepage": "https://github.com/jdlehne/news-scrape#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.12.3",
+    "request": "^2.83.0"
+  }
+}
