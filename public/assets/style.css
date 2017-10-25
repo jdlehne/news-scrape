@@ -8,22 +8,16 @@
 }
 
 #articles {
-
-  overflow: auto;
-  width: 60%;
   height: 700px;
 }
 
 #notes {
-
-  width: 30%;
+  width: 80%;
 }
 
 textarea,
 input {
-
   width: 100%;
-  background-color: #FCF5C7;
 }
 
 input {
