@@ -3,10 +3,10 @@ var exphbs  = require('express-handlebars');
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var methodOverride = require('method-override');
 
-var app = express();
-var port = 5050;
-
+const PORT = process.env.PORT || 5050;
+let app = express();
 //app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 //app.set('view engine', 'handlebars');
 
@@ -27,10 +27,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
+/*
+app
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended:true }))
+    .use(bodyParser.text())
+    .use(bodyParser.json({ type: 'application/vnd.api+json' }))
+    .use(methodOverride('_method'))
+    .use(logger('dev'))
+    .use(express.static("public"))
+    .use(require('./controllers/artIndex.js'));
+*/
+
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/news-scrape", {
+mongoose.connect(process.env.MONGODB_URI ||"mongodb://localhost/news-scrape", {
   useMongoClient: true
 });
 
@@ -39,19 +51,19 @@ mongoose.connect("mongodb://localhost/news-scrape", {
 
 // A GET route for scraping the echojs website
 app.get("/scrape", function(req, res) {
-  axios.get("http://www.echojs.com/").then(function(response) {
+  axios.get("http://www.gamespot.com/").then(function(response) {
 
     var $ = cheerio.load(response.data);
 
-    $("article h2").each(function(i, element) {
+    $("article.media").each(function(i, element) {
       var result = {};
 
       result.title = $(this)
-        .children("a")
-        .text();
-      result.link = $(this)
-        .children("a")
-        .attr("href");
+        .find("h3.media-title").text();
+      result.summary = $(this)
+        .find("p.media-deck").text();
+      result.link = "https://www.gamespot.com" + $(this)
+        .find("a").attr("href");
       db.Article
         .create(result)
         .then(function(dbArticle) {
@@ -102,7 +114,25 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+//===================
+/*
+const db = mongoose.connection;
 
+// Show any mongoose errors
+db.on("error", function(error) {
+    console.log("Mongoose Error: ", error);
+});
 
-app.listen(port);
-console.log("Listening on port: " + port);
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+    console.log("Mongoose connection successful.");
+    // start the server, listen on port 3000
+    app.listen(PORT, function() {
+        console.log("App running on port: " + PORT);
+    });
+});
+
+module.exports = app;*/
+
+app.listen(PORT);
+console.log("Listening on port: " + PORT);

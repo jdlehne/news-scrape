@@ -1,4 +1,3 @@
-'use strict';
 
 var express = require('express');
 var router = express.Router();
@@ -6,8 +5,8 @@ var router = express.Router();
 var request = require('request');
 var cheerio = require('cheerio');
 
-var Article = require('../../models/Article');
-var Note = require('../../models/Note');
+var Article = require('../models/Article');
+var Note = require('../models/Note');
 
 
 // get all articles from database
@@ -122,14 +121,14 @@ router.get('/scrape', function(req, res, next) {
 
     var results = [];
 
-    $('article.media').each(function(i, e) {
+    $('article.media').each(function(i, element) {
       var title = $(element).find("h3.media-title").text();
       var summary = $(element).find("p.media-deck").text();
       var link = $(element).find("a").attr("href");
 
         newArticle = {};
 
-      if (link !== undefined && link.includes('http') && title !== '') {
+      if (link !== undefined && link.includes('https') && title !== '') {
         newArticle = {
           title: title,
           summary: summary,
