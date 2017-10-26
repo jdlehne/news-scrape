@@ -1,4 +1,24 @@
+body{
+  font-family: 'Ramaraja', serif;
+}
 
+.btn{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    float:right;
+}
+
+#artTitle{
+      font-size: 35px;
+}
+
+#artSummary{
+  font-size: 25px;
+font-style: italic;
+}
+
+#artLink{
+  font-size: 20px;
+}
 
 .container {
   width: 1140px;
@@ -28,4 +48,49 @@ input {
 textarea {
   height: 200px;
   font-size: 18px;
+}
+
+.panel{
+  box-shadow: 10px 10px 5px grey;
+  margin-bottom: 30px;
+  padding: 25px;
+  background-color: rgba(250,235,215,0.8);
+  overflow:hidden;
+}
+
+.navbar{
+  background-color: rgba(250,235,215,0.8);
+}
+
+.navbar-brand{
+  font-size:40px;
+}
+
+.nav-link{
+  font-size: 50px;
+  float:right;
+}
+
+nav ul li {
+  list-style:none;
+  margin:10px;
+  float: right;
+}
+
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* Preserve aspet ratio */
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.jumbotron{
+  background-color: rgba(250,215,215,0.95);
+}
+
+#modalBodyA{
+  text-align: center;
+  font-size: 35px;
 }

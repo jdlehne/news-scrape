@@ -7,24 +7,23 @@ $.getJSON("/articles", function(data) {
   for (var i = 1; i < 20; i++) { ///---currently limiting results to 20 articles---
     $("#articles").append('<div class="panel panel-default">' +
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
-      'data-toggle="modal" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
-      '</div><div class="panel-body"><p>' + data[i].summary + '</p><a href="' +
-      data[i].link + '">' + data[i].link + '</a></div><br><button class="btn btn-success"' +
+      'data-toggle="modal" id="artTitle" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
+      '</div><div class="panel-body"><p id="artSummary">' + data[i].summary + '</p><a href="' +
+      data[i].link + '" id="artLink">' + data[i].link + '</a></div><br><button class="btn btn-success"' +
       ' data-id="' + data[i]._id + '"id="saveArt">Save Article</button></div>');
   }
 });
 
 //=====    FUNCTION TO SAVE AN ARTICLE ===//
 $(document).on("click", "#saveArt", function() {
-  console.log("saving article");
+  $("#modalBodyA").empty();
   var articleIdToSave = $(this).attr("data-id");
-  console.log(articleIdToSave);
+  $("#myModal").modal('show');
+  $("#modalBodyA").append("<h4> Article Saved </h4>");
   $.ajax({
     method: "POST",
     url: "/saved/" + articleIdToSave,
   }).done(function(saved) {
-    ("#myModal").modal('show');
-    ("#modalBody").append("<h4> Article Saved </h4>");
     console.log(saved)
   });
 });
@@ -39,9 +38,9 @@ $.getJSON("/saved", function(data) {
   for (var i = 0; i < data.length; i++) {
     $("#savedArticles").append('<div class="panel panel-default">' +
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
-      'data-toggle="modal" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
-      '</div><div class="panel-body"><p>' + data[i].summary + '</p><a href="' +
-      data[i].link + '">' + data[i].link + '</a></div><br><button class="btn btn-danger"' +
+      'data-toggle="modal" id="artTitle" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
+      '</div><div class="panel-body"><p id="artSummary">' + data[i].summary + '</p><a href="' +
+      data[i].link + '" id="artLink">' + data[i].link + '</a></div><br><button class="btn btn-danger"' +
       ' data-id="' + data[i]._id + '"id="deleteArt">Unsave Article</button><button class="btn btn-primary"' +
       ' id="noteBtn" data-id="' + data[i]._id + '">Article Notes</button></div>');
   }
