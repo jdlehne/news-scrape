@@ -9,7 +9,7 @@ $.getJSON("/articles", function(data) {
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
       'data-toggle="modal" id="artTitle" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
       '</div><div class="panel-body"><p id="artSummary">' + data[i].summary + '</p><a href="' +
-      data[i].link + '" id="artLink">' + data[i].link + '</a></div><br><button class="btn btn-success"' +
+      data[i].link + '" id="artLink" target="blank">' + data[i].link + '</a></div><br><button class="btn btn-success"' +
       ' data-id="' + data[i]._id + '"id="saveArt">Save Article</button></div>');
   }
 });
@@ -40,7 +40,7 @@ $.getJSON("/saved", function(data) {
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
       'data-toggle="modal" id="artTitle" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
       '</div><div class="panel-body"><p id="artSummary">' + data[i].summary + '</p><a href="' +
-      data[i].link + '" id="artLink">' + data[i].link + '</a></div><br><button class="btn btn-danger"' +
+      data[i].link + '" id="artLink" target="blank">' + data[i].link + '</a></div><br><button class="btn btn-danger"' +
       ' data-id="' + data[i]._id + '"id="deleteArt">Unsave Article</button><button class="btn btn-primary"' +
       ' id="noteBtn" data-id="' + data[i]._id + '">Article Notes</button></div>');
   }
