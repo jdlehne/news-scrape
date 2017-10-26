@@ -144,11 +144,11 @@ app.post("/delete/:id", function(req, res) {
   console.log("delete route hit");
 	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved":false}, {new:true})
 	.then(function(err, deleted) {
+    res.redirect("/saved");
 		if (err) {
 			console.log(err);
 		} else {
 			res.send(deleted);
-      res.redirect("/");
 		}
 	});
 });

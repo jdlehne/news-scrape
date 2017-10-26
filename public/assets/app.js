@@ -1,5 +1,6 @@
-
+//==============================================//
 //============  INDEX PAGE LOGIC  =============//
+//============================================//
 
 $.getJSON("/articles", function(data) {
   //for (var i = 0; i < data.length; i++) {
@@ -13,6 +14,7 @@ $.getJSON("/articles", function(data) {
   }
 });
 
+//=====    FUNCTION TO SAVE AN ARTICLE ===//
 $(document).on("click", "#saveArt", function() {
   console.log("saving article");
   var articleIdToSave = $(this).attr("data-id");
@@ -20,12 +22,16 @@ $(document).on("click", "#saveArt", function() {
   $.ajax({
     method: "POST",
     url: "/saved/" + articleIdToSave,
-  }).then(function(saved) {
+  }).done(function(saved) {
+    ("#myModal").modal('show');
+    ("#modalBody").append("<h4> Article Saved </h4>");
     console.log(saved)
   });
 });
 
+//============================================//
 //=======   SAVED ARTICLE PAGE LOGIC =========//
+//============================================//
 
 //======  GET TO RETURN ALL ARTICLES FROM SAVED LIST w/ SAVED:TRUE FROM DB =====//
 
@@ -96,9 +102,9 @@ $(document).on("click", "#deleteArt", function() {
         saved:false
       },
     })
-    .done(function(deleted) {
+    .then(function(deleted) {
       console.log("Removing entry below");
       console.log(deleted);
-      location.reload();
+      window.location.reload();
     });
 });
