@@ -4,36 +4,19 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var methodOverride = require('method-override');
-var Note = require("./models/Note.js");
-var Article = require("./models/Article.js");
 
 mongoose.Promise = Promise;
 
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT || 5000;
 let app = express();
 //app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 //app.set('view engine', 'handlebars');
+
 var axios = require("axios");
 var cheerio = require("cheerio");
 
+var db = require("./models");
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://heroku_lslc7jm7:dv8fjvle7ad0floc6io1d2ks36@ds127105.mlab.com:27105/heroku_lslc7jm7";
-mongoose.connect(MONGODB_URI, {
-  useMongoClient: true
-});
-
-var db = mongoose.connection;
-
-db.on("error", function(error) {
-	console.log("Mongoose Error: ", error);
-});
-
-db.once("open", function() {
-	console.log("Mongoose connected successfully.");
-});
-
-
-//======================//
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(process.cwd() + '/public'));
@@ -65,7 +48,7 @@ app.get("/scrape", function(req, res) {
         .find("p.media-deck").text();
       result.link = "https://www.gamespot.com" + $(this)
         .find("a").attr("href");
-      Article
+      db.Article
         .create(result)
         .then(function(dbArticle) {
           res.redirect("/");
@@ -78,7 +61,7 @@ app.get("/scrape", function(req, res) {
 });
 
 app.get("/articles", function(req, res) {
-  Article
+  db.Article
     .find({})
     .then(function(dbArticle) {
       res.json(dbArticle);
@@ -90,7 +73,7 @@ app.get("/articles", function(req, res) {
 
 //----get saved articles----/articles/saved will show as JSON--//
 app.get('/saved', function(req, res) {
-    Article
+    db.Article
         .find({})
         .where('saved').equals(true)
         .where('deleted').equals(false)
@@ -107,7 +90,7 @@ app.get('/saved', function(req, res) {
 
 //----get one article by id----//
 app.get("/articles/:id", function(req, res) {
-  Article
+  db.Article
     .findOne({ _id: req.params.id })
     .populate("note")
     .then(function(dbArticle) {
@@ -120,7 +103,7 @@ app.get("/articles/:id", function(req, res) {
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
-  Note
+  db.Note
     .create(req.body)
     .then(function(dbNote) {
       return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
@@ -136,7 +119,7 @@ app.post("/articles/:id", function(req, res) {
 //----working route to change saved db boolean to true---//
 app.post("/saved/:id", function(req, res) {
   console.log("save route hit");
-	Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true}, {new:true})
+	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true}, {new:true})
 	.then(function(error, saved) {
 		if (error) {
 			console.log(error);
@@ -149,7 +132,7 @@ app.post("/saved/:id", function(req, res) {
 
 app.post("/delete/:id", function(req, res) {
   console.log("delete route hit");
-	Article.findOneAndUpdate({"_id": req.params.id}, {"saved":false}, {new:true})
+	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved":false}, {new:true})
 	.then(function(err, deleted) {
     res.redirect("/saved");
 		if (err) {
@@ -162,5 +145,23 @@ app.post("/delete/:id", function(req, res) {
 
 module.exports = app;
 
+
+///======connection test=======///
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://heroku_lslc7jm7:dv8fjvle7ad0floc6io1d2ks36@ds127105.mlab.com:27105/heroku_lslc7jm7";
+mongoose.connect(MONGODB_URI, {
+  useMongoClient: true
+});
+
+var database = mongoose.connection;
+
+database.on("error", function(error) {
+	console.log("Mongoose Error: ", error);
+});
+
+database.once("open", function() {
+	console.log("Mongoose connected successfully.");
+});
+
+//====================================================//
 app.listen(PORT);
 console.log("Listening on port: " + PORT);
