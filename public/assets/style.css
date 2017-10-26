@@ -64,6 +64,7 @@ textarea {
 
 .navbar-brand{
   font-size:40px;
+  color: #596ccc;
 }
 
 .nav-link{
@@ -92,5 +93,4 @@ nav ul li {
 
 #modalBodyA{
   text-align: center;
-  font-size: 35px;
 }
