@@ -1,6 +1,5 @@
-
 var express = require('express');
-var router = express.Router();
+var app = express.Router();
 
 var request = require('request');
 var cheerio = require('cheerio');
@@ -8,23 +7,21 @@ var cheerio = require('cheerio');
 var Article = require('../models/Article');
 var Note = require('../models/Note');
 
-
 // get all articles from database
-router.get('/', function(req, res) {
+app.get('/', function(req, res) {
   Article
     .find({})
-    .exec(function(error, docs) {
-      if (error) {
-        console.log(error);
-        res.status(500);
-      } else {
-        res.status(200).json(docs);
-      }
+    .then(function(error, dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
     });
 });
 
 /*    //get all saved articles
-router.get('/saved', function(req, res) {
+app.get('/saved', function(req, res) {
   Article
     .find({})
     .where('saved').equals(true)
@@ -41,7 +38,7 @@ router.get('/saved', function(req, res) {
 });     */
 
 /*  // get all deleted articles
-router.get('/deleted', function(req, res) {
+app.get('/deleted', function(req, res) {
   Article
     .find({})
     .where('deleted').equals(true)
@@ -56,7 +53,7 @@ router.get('/deleted', function(req, res) {
 });    */
 
 // save an article
-router.post('/save/:id', function(req, res) {
+app.post('/save/:id', function(req, res) {
   Article.findByIdAndUpdate(req.params.id, {
       $set: {
         saved: true
@@ -75,7 +72,7 @@ router.post('/save/:id', function(req, res) {
 });
 
 /*  // dismiss a scraped article
-router.delete('/dismiss/:id', function(req, res) {
+app.delete('/dismiss/:id', function(req, res) {
   Article.findByIdAndUpdate(req.params.id, {
       $set: {
         deleted: true
@@ -94,7 +91,7 @@ router.delete('/dismiss/:id', function(req, res) {
 });    */
 
 /*   // delete a saved article
-router.delete('/:id', function(req, res) {
+app.delete('/:id', function(req, res) {
   Article.findByIdAndUpdate(req.params.id, {
       $set: {
         deleted: true
@@ -114,7 +111,7 @@ router.delete('/:id', function(req, res) {
 });   */
 
 // scrape articles
-router.get('/scrape', function(req, res, next) {
+app.get('/scrape', function(req, res, next) {
   request('https://www.gamespot.com', function(error, response, html) {
 
     var $ = cheerio.load(html);
@@ -126,7 +123,7 @@ router.get('/scrape', function(req, res, next) {
       var summary = $(element).find("p.media-deck").text();
       var link = $(element).find("a").attr("href");
 
-        newArticle = {};
+      newArticle = {};
 
       if (link !== undefined && link.includes('https') && title !== '') {
         newArticle = {
@@ -153,5 +150,3 @@ router.get('/scrape', function(req, res, next) {
 }, function(req, res) {
   res.redirect('/');
 });
-
-module.exports = router;

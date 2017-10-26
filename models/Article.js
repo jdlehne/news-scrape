@@ -11,7 +11,19 @@ var ArticleSchema = new Schema({
     type: String,
     //required: true
   },
-  
+
+  saved: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   link: {
     type: String,
     required: true

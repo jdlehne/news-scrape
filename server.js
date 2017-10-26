@@ -18,26 +18,21 @@ var cheerio = require("cheerio");
 
 var db = require("./models");
 
-// Configure middleware
-
-// Use morgan logger for logging requests
 app.use(logger("dev"));
-// Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: false }));
-// Use express.static to serve the public folder as a static directory
-app.use(express.static("public"));
+app.use(express.static(process.cwd() + '/public'));
 
-/*
-app
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended:true }))
-    .use(bodyParser.text())
-    .use(bodyParser.json({ type: 'application/vnd.api+json' }))
-    .use(methodOverride('_method'))
-    .use(logger('dev'))
-    .use(express.static("public"))
-    .use(require('./controllers/artIndex.js'));
-*/
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.text());
+app.use(bodyParser.json({type:'application/vnd.api+json'}));
+app.use(methodOverride('_method'));
+
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+
+//require('./controllers/artIndex.js');
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
@@ -49,12 +44,10 @@ mongoose.connect(process.env.MONGODB_URI ||"mongodb://localhost/news-scrape", {
 
 // Routes
 
-// A GET route for scraping the echojs website
+// A GET route for scraping
 app.get("/scrape", function(req, res) {
   axios.get("http://www.gamespot.com/").then(function(response) {
-
     var $ = cheerio.load(response.data);
-
     $("article.media").each(function(i, element) {
       var result = {};
 
@@ -87,7 +80,24 @@ app.get("/articles", function(req, res) {
     });
 });
 
+//----get saved articles----/articles/saved will show as JSON--//
+app.get('/saved', function(req, res) {
+    db.Article
+        .find({})
+        .where('saved').equals(true)
+        .where('deleted').equals(false)
+        .populate('notes')
+        .exec(function(error, entries) {
+            if (error) {
+                console.log(error);
+                res.status(500);
+            } else {
+                res.status(200).json(entries);
+            }
+        });
+});
 
+//----get one article by id----//
 app.get("/articles/:id", function(req, res) {
   db.Article
     .findOne({ _id: req.params.id })
@@ -101,7 +111,7 @@ app.get("/articles/:id", function(req, res) {
 });
 
 // Route for saving/updating an Article's associated Note
-app.post("/articles/:id", function(req, res) {
+app.post("/save/:id", function(req, res) {
   db.Note
     .create(req.body)
     .then(function(dbNote) {
@@ -114,9 +124,22 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+//----working route to change saved db boolean to true---//
+app.post("/saved/:id", function(req, res) {
+  console.log("save route hit");
+	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true})
+	.then(function(err, saved) {
+		if (err) {
+			console.log(error);
+		} else {
+			res.send(saved);
+		}
+	});
+});
 //===================
 /*
-const db = mongoose.connection;
+//const db = mongoose.connection;
 
 // Show any mongoose errors
 db.on("error", function(error) {
@@ -130,9 +153,9 @@ db.once("open", function() {
     app.listen(PORT, function() {
         console.log("App running on port: " + PORT);
     });
-});
+});*/
 
-module.exports = app;*/
+module.exports = app;
 
 app.listen(PORT);
 console.log("Listening on port: " + PORT);
