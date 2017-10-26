@@ -111,7 +111,7 @@ app.get("/articles/:id", function(req, res) {
 });
 
 // Route for saving/updating an Article's associated Note
-app.post("/save/:id", function(req, res) {
+app.post("/articles/:id", function(req, res) {
   db.Note
     .create(req.body)
     .then(function(dbNote) {
@@ -128,12 +128,27 @@ app.post("/save/:id", function(req, res) {
 //----working route to change saved db boolean to true---//
 app.post("/saved/:id", function(req, res) {
   console.log("save route hit");
-	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true})
-	.then(function(err, saved) {
-		if (err) {
+	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true}, {new:true})
+	.then(function(error, saved) {
+		if (error) {
 			console.log(error);
 		} else {
 			res.send(saved);
+		}
+	});
+});
+
+
+
+app.post("/delete/:id", function(req, res) {
+  console.log("delete route hit");
+	db.Article.findOneAndUpdate({"_id": req.params.id}, {"saved":false}, {new:true})
+	.then(function(err, deleted) {
+		if (err) {
+			console.log(err);
+		} else {
+			res.send(deleted);
+      res.redirect("/");
 		}
 	});
 });

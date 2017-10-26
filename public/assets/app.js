@@ -1,6 +1,9 @@
+
+//============  INDEX PAGE LOGIC  =============//
+
 $.getJSON("/articles", function(data) {
   //for (var i = 0; i < data.length; i++) {
-  for (var i = 0; i < 10; i++) {
+  for (var i = 1; i < 20; i++) { ///---currently limiting results to 20 articles---
     $("#articles").append('<div class="panel panel-default">' +
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
       'data-toggle="modal" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
@@ -17,25 +20,39 @@ $(document).on("click", "#saveArt", function() {
   $.ajax({
     method: "POST",
     url: "/saved/" + articleIdToSave,
-    saved: {saved: true}
   }).then(function(saved) {
     console.log(saved)
   });
 });
 
-// Whenever someone clicks an h3 tag
-$(document).on("click", "h3", function() {
+//=======   SAVED ARTICLE PAGE LOGIC =========//
 
+//======  GET TO RETURN ALL ARTICLES FROM SAVED LIST w/ SAVED:TRUE FROM DB =====//
+
+$.getJSON("/saved", function(data) {
+  for (var i = 0; i < data.length; i++) {
+    $("#savedArticles").append('<div class="panel panel-default">' +
+      '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
+      'data-toggle="modal" data-id="' + data[i]._id + '">' + data[i].title + '</h3>' +
+      '</div><div class="panel-body"><p>' + data[i].summary + '</p><a href="' +
+      data[i].link + '">' + data[i].link + '</a></div><br><button class="btn btn-danger"' +
+      ' data-id="' + data[i]._id + '"id="deleteArt">Unsave Article</button><button class="btn btn-primary"' +
+      ' id="noteBtn" data-id="' + data[i]._id + '">Article Notes</button></div>');
+  }
+});
+
+//===  FUNCTION TO PROMPT MODAL FOR REQUESTED ARTICLE ===//
+
+$(document).on("click", "#noteBtn", function() {
   $("#modalBody").empty();
-
   var thisId = $(this).attr("data-id");
-
   $.ajax({
       method: "GET",
       url: "/articles/" + thisId
     })
     .done(function(data) {
       console.log(data);
+      $("#myModal").modal('show');
       $("#modalTitle").html("<h4>" + data.title + "</h4>");
       $("#modalBody").append("<input id='titleinput' name='title' >");
       $("#modalBody").append("<textarea id='bodyinput' name='body'></textarea>");
@@ -47,19 +64,14 @@ $(document).on("click", "h3", function() {
     });
 });
 
-// When you click the savenote button
+//===  FUNCTION TO SAVE note TO DATABASE ===//
 $(document).on("click", "#savenote", function() {
-  // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-
-  // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
       method: "POST",
       url: "/articles/" + thisId,
       data: {
-        // Value taken from title input
         title: $("#titleinput").val(),
-        // Value taken from note textarea
         body: $("#bodyinput").val()
       }
     })
@@ -70,4 +82,23 @@ $(document).on("click", "#savenote", function() {
 
   $("#titleinput").val("");
   $("#bodyinput").val("");
+});
+
+//====   FUNCTION TO DELETE ARTICLE FROM SAVED LIST ==//
+
+$(document).on("click", "#deleteArt", function() {
+  var thisId = $(this).attr("data-id");
+  console.log("deleting article");
+  $.ajax({
+      method: "POST",
+      url: "/delete/" + thisId,
+      saved:{
+        saved:false
+      },
+    })
+    .done(function(deleted) {
+      console.log("Removing entry below");
+      console.log(deleted);
+      location.reload();
+    });
 });
