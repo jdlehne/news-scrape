@@ -58,7 +58,7 @@ $(document).on("click", "#noteBtn", function() {
     .done(function(data) {
       console.log(data);
       $("#myModal").modal('show');
-      $("#modalTitle").html("<h4>" + data.title + "</h4>");
+      $("#modalTitle").html('<h4 id="modalTitle">' + data.title + "</h4>");
       $("#modalBody").append("<input id='titleinput' name='title' >");
       $("#modalBody").append("<textarea id='bodyinput' name='body'></textarea>");
       $("#savenote").attr("data-id", data._id);

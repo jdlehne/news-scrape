@@ -2,10 +2,33 @@ body{
   font-family: 'Ramaraja', serif;
 }
 
+.container {
+  width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5%;
+}
+
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* Preserve aspet ratio */
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .btn{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     float:right;
 }
+
+#deleteArt{
+  margin-left:10px;
+}
+
+
+/*========   ARTICLE PANEL STYLE ==========*/
 
 #artTitle{
       font-size: 35px;
@@ -20,35 +43,11 @@ font-style: italic;
   font-size: 20px;
 }
 
-.container {
-  width: 1140px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 5%;
-}
 
 #articles {
   height: 700px;
 }
 
-#notes {
-  width: 80%;
-}
-
-textarea,
-input {
-  width: 100%;
-}
-
-input {
-  height: 36px;
-  font-size: 24px;
-}
-
-textarea {
-  height: 200px;
-  font-size: 18px;
-}
 
 .panel{
   box-shadow: 10px 10px 5px grey;
@@ -57,6 +56,9 @@ textarea {
   background-color: rgba(250,235,215,0.8);
   overflow:hidden;
 }
+
+
+/*========  NAVBAR STYLE   =========*/
 
 .navbar{
   background-color: rgba(250,235,215,0.8);
@@ -78,22 +80,7 @@ nav ul li {
   float: right;
 }
 
-#titleinput{
-  margin-bottom: 20px;
-}
-
-#deleteArt{
-  margin-left:10px;
-}
-
-#bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  /* Preserve aspet ratio */
-  min-width: 100%;
-  min-height: 100%;
-}
+/*=======   JUMBOTRON STYLE ===========*/
 
 .jumbotron{
   background-color: rgba(250,215,215,0.95);
@@ -107,6 +94,45 @@ nav ul li {
   color: cornflowerblue;
 }
 
+/*========   MODAL STYLE   ========*/
+
 #modalBodyA{
   text-align: center;
+}
+
+#modalTitle{
+  font-size: 30px;
+  padding: 10px 10px 0px 10px
+}
+
+#modalBody{
+  background-color: #adb8b8;
+}
+
+.modal-header, .modal-footer{
+  background-color: #e0e6e9;
+}
+
+#titleinput{
+  margin-bottom: 20px;
+}
+
+#titleinput, #bodyinput{
+  padding: 20px;
+ box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+textarea,
+input {
+  width: 100%;
+}
+
+input {
+  height: 36px;
+  font-size: 24px;
+}
+
+textarea {
+  height: 200px;
+  font-size: 18px;
 }
