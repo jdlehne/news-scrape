@@ -10,8 +10,8 @@ mongoose.Promise = Promise;
 const PORT = process.env.PORT || 5000;
 let app = express();
 
- app.engine('handlebars', exphbs({defaultLayout: 'main'}));
- app.set('view engine', 'handlebars');
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));

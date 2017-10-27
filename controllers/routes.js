@@ -6,6 +6,10 @@ const express = require('express'),
   db = require("../models"),
   Article = require('../models/Article');
 
+  router.get('/', function (req, res, next) {
+    res.render('home', {layout: false});
+});
+
   //==== Scrape route ===//
 
   router.get('/scrape', function(req, res, next) {
