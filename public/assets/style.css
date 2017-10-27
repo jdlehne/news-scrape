@@ -78,6 +78,14 @@ nav ul li {
   float: right;
 }
 
+#titleinput{
+  margin-bottom: 20px;
+}
+
+#deleteArt{
+  margin-left:10px;
+}
+
 #bg {
   position: fixed;
   top: 0;
@@ -93,6 +101,10 @@ nav ul li {
 
 #indexJumbo{
   padding-left: 60px;
+}
+
+#jumboTitle{
+  color: cornflowerblue;
 }
 
 #modalBodyA{
