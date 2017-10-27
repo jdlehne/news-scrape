@@ -6,7 +6,6 @@ const express = require('express'),
   db = require("../models"),
   Article = require('../models/Article');
 
-
   //==== Scrape route ===//
 
   router.get('/scrape', function(req, res, next) {
@@ -24,14 +23,14 @@ const express = require('express'),
                       link: link,
                       summary:summary
                   };
-                  let entry = new Article(result);
-                  entry.save(function(err, doc) {
+                  let newArticle = new Article(result);
+                  newArticle.save(function(err, entry) {
                       if (err) {
                           if (!err.errors.link) {
                               console.log(err);
                           }
                       } else {
-                          console.log('new article added');
+                          console.log('New Entry Added to DB');
                       }
                   });
               }
