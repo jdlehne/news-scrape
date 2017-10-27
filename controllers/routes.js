@@ -10,29 +10,64 @@ const express = require('express'),
   //==== Scrape route ===//
 
   router.get('/scrape', function(req, res, next) {
-    request('https://www.gamespot.com', function(error, response, html) {
-      let $ = cheerio.load(html);
-      let results = [];
-      $('article.media').each(function(i, element) {
-        let title = $(this).find("h3.media-title").text(),
-          link = "https://www.gamespot.com" + $(this).find("a").attr("href"),
-          summary = $(this).find("p.media-deck").text();
-        result = {};
-        db.Article
-          .create(result)
-          .then(function(dbArticle) {
-            return res.redirect("/");
-          })
-          .catch(function(err) {
-            res.json(err);
+      request('https://www.gamespot.com', function(error, response, html) {
+          let $ = cheerio.load(html);
+          let results = [];
+          $('article.media').each(function(i, element) {
+              let title =  $(this).find("h3.media-title").text(),
+                  link = "https://www.gamespot.com" + $(this).find("a").attr("href"),
+                  summary = $(this).find("p.media-deck").text();
+                  result = {};
+              if (link !== undefined && link.includes('http') &&  title !== '') {
+                  result = {
+                      title: title,
+                      link: link,
+                      summary:summary
+                  };
+                  // create new article
+                  let entry = new Article(result);
+                  // save to database
+                  entry.save(function(err, doc) {
+                      if (err) {
+                          if (!err.errors.link) {
+                              console.log(err);
+                          }
+                      } else {
+                          console.log('new article added');
+                      }
+                  });
+              }
           });
+          next();
       });
-      next();
-
-    }, function(req, res) {
+  }, function(req, res) {
       res.redirect('/');
-    });
   });
+
+  // router.get('/scrape', function(req, res, next) {
+  //   request('https://www.gamespot.com', function(error, response, html) {
+  //     let $ = cheerio.load(html);
+  //     let results = [];
+  //     $('article.media').each(function(i, element) {
+  //       let title = $(this).find("h3.media-title").text(),
+  //         link = "https://www.gamespot.com" + $(this).find("a").attr("href"),
+  //         summary = $(this).find("p.media-deck").text();
+  //       result = {};
+  //       db.Article
+  //         .create(result)
+  //         .then(function(dbArticle) {
+  //           return res.redirect("/");
+  //         })
+  //         .catch(function(err) {
+  //           res.json(err);
+  //         });
+  //     });
+  //     next();
+  //
+  //   }, function(req, res) {
+  //     res.redirect('/');
+  //   });
+  // });
 
 //====route to grab and display articles===//
 
