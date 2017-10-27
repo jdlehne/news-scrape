@@ -24,9 +24,7 @@ const express = require('express'),
                       link: link,
                       summary:summary
                   };
-                  // create new article
                   let entry = new Article(result);
-                  // save to database
                   entry.save(function(err, doc) {
                       if (err) {
                           if (!err.errors.link) {
