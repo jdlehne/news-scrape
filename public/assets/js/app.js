@@ -4,7 +4,7 @@
 
 $.getJSON("/articles", function(data) {
   //for (var i = 0; i < data.length; i++) {//--basic loop displays all results from db
-  for (var i = data.length; i-- > 0; ){ //---loop backwards through rray showing most recent first
+  for (var i = data.length-1; i >= 0; i-- ){ //---loop backwards through rray showing most recent first
   //for (var i = 1; i < 20; i++) { ///---currently limiting results to 20 articles---
     $("#articles").append('<div class="panel panel-default">' +
       '<div class="panel-heading" ><h3 class="panel-title" data-target="#myModal"' +
